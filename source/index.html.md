@@ -1,14 +1,9 @@
 ---
-title: API Reference
+title: Documentation API CRDM UNIVERSE
 
 language_tabs: # must be one of https://github.com/rouge-ruby/rouge/wiki/List-of-supported-languages-and-lexers
-  - shell
-  - ruby
-  - python
-  - javascript
 
 toc_footers:
-  - <a href='#'>Sign Up for a Developer Key</a>
   - <a href='https://github.com/slatedocs/slate'>Documentation Powered by Slate</a>
 
 includes:
@@ -20,226 +15,645 @@ code_clipboard: true
 
 meta:
   - name: description
-    content: Documentation for the Kittn API
+    content: Documentation for the CRDM UNIVERSE API
 ---
 
 # Introduction
 
-Welcome to the Kittn API! You can use our API to access Kittn API endpoints, which can get information on various cats, kittens, and breeds in our database.
+Documentation pout l'API de l'application CRDM UNIVERSE
 
-We have language bindings in Shell, Ruby, Python, and JavaScript! You can view code examples in the dark area to the right, and you can switch the programming language of the examples with the tabs in the top right.
 
-This example API documentation page was created with [Slate](https://github.com/slatedocs/slate). Feel free to edit it and use it as a base for your own API's documentation.
+# Authentification
 
-# Authentication
 
-> To authorize, use this code:
+CRDM SYSTEM utilise un couple login/password personnel pour autoriser l' acces a son API.
 
-```ruby
-require 'kittn'
+C'est une authentification de type Cookie
 
-api = Kittn::APIClient.authorize!('meowmeowmeow')
-```
-
-```python
-import kittn
-
-api = kittn.authorize('meowmeowmeow')
-```
-
-```shell
-# With shell, you can just pass the correct header with each request
-curl "api_endpoint_here" \
-  -H "Authorization: meowmeowmeow"
-```
-
-```javascript
-const kittn = require('kittn');
-
-let api = kittn.authorize('meowmeowmeow');
-```
-
-> Make sure to replace `meowmeowmeow` with your API key.
-
-Kittn uses API keys to allow access to the API. You can register a new Kittn API key at our [developer portal](http://example.com/developers).
-
-Kittn expects for the API key to be included in all API requests to the server in a header that looks like the following:
-
-`Authorization: meowmeowmeow`
-
-<aside class="notice">
-You must replace <code>meowmeowmeow</code> with your personal API key.
+<aside class="info">
+Il faut envoyer le cookie XSRF-TOKEN dans le header de la requete pour pouvoir acceder aux formulaires.
 </aside>
 
-# Kittens
+[Lien vers le detail du XSRF-TOKEN](#xsrf-token)
 
-## Get All Kittens
 
-```ruby
-require 'kittn'
+## Login
 
-api = Kittn::APIClient.authorize!('meowmeowmeow')
-api.kittens.get
+Ce endpoint permet de s'identifier.
+
+### HTTP Request
+
+`POST http://example.com/login`
+
+### Parametres POST 
+
+| Parametre       | Description            |
+|-----------------|------------------------|
+| email (text)    | adresse mail           |
+| password (text) | mot de passe           |
+| remember (bool) | case se souvenir de moi |
+
+### Code HTTP retourne
+
+`204 No Content             : Login OK`
+
+`422 Unprocessable Content  : Echec de la validation des donnees (voir message particuler)`
+
+```json
+{
+    "message": "The given data was invalid.",
+    "errors": {
+        "email": [
+            "The email field is required."
+        ],
+        "password": [
+            "The password field is required."
+        ],
+        "remember": [
+            "The remember field is required."
+        ]
+    }
+}
 ```
 
-```python
-import kittn
+`401 Unauthorized          : Login KO`
+## Logout
 
-api = kittn.authorize('meowmeowmeow')
-api.kittens.get()
-```
+Ce endpoint permet de se deconnecter.
 
-```shell
-curl "http://example.com/api/kittens" \
-  -H "Authorization: meowmeowmeow"
-```
+### HTTP Request
 
-```javascript
-const kittn = require('kittn');
+`POST http://example.com/logout`
 
-let api = kittn.authorize('meowmeowmeow');
-let kittens = api.kittens.get();
-```
+### Parametres POST 
 
-> The above command returns JSON structured like this:
+| Parametre | Description |
+|-----------|-------------|
+| none      | rien        |
+
+
+### Code HTTP retourne
+
+`204 No Content : Logout OK`
+
+`401 Unauthorized : Logout KO`
+
+## XSRF-TOKEN
+
+Ce endpoint permet de se recuperer le cookie XSRF-TOKEN.
+
+### HTTP Request
+
+`GET http://example.com/sanctum/csrf-cookie`
+
+### Parametres GET 
+
+| Parametre | Description |
+|-----------|-------------|
+| none      | rien        |
+
+
+### Code HTTP retourne
+
+`204 No Content : Cookie bien recupere OK`
+
+`401 Unauthorized : Probleme recuperation Cookie KO`
+
+# Utilisateurs
+
+## Lister les utilisateurs
+
+> Cet appel retourne un fichier JSON structure tel que ci-dessous:
 
 ```json
 [
   {
-    "id": 1,
-    "name": "Fluffums",
-    "breed": "calico",
-    "fluffiness": 6,
-    "cuteness": 7
-  },
-  {
-    "id": 2,
-    "name": "Max",
-    "breed": "unknown",
-    "fluffiness": 5,
-    "cuteness": 10
-  }
+        "id": 1,
+        "name": "Lamouliatte",
+        "first_name": "Nicolas",
+        "title": "M.",
+        "phone_number": "+33752639531",
+        "email": "nicolas@crdm-developpements.com",
+        "email_verified_at": "2023-09-21T14:48:30.000000Z",
+        "deleted_at": null,
+        "created_at": "2023-09-21T14:48:30.000000Z",
+        "updated_at": "2023-09-21T14:48:30.000000Z",
+        "preferences": {
+            "localisation": "fr",
+            "isDarkModeEnabled": false
+        }
+    },
+    {
+        "id": 2,
+        "name": "Riotte",
+        "first_name": "Christophe",
+        "title": "M.",
+        "phone_number": "+33782170073",
+        "email": "christophe.riotte@crdm-developpements.com",
+        "email_verified_at": "2023-09-21T14:48:30.000000Z",
+        "deleted_at": null,
+        "created_at": "2023-09-21T14:48:30.000000Z",
+        "updated_at": "2023-09-21T14:48:30.000000Z",
+        "preferences": {
+            "localisation": "fr",
+            "isDarkModeEnabled": false
+        }
+    }
 ]
 ```
 
-This endpoint retrieves all kittens.
+Ce endpoint donne la liste des utilisateurs (non supprimes).
 
 ### HTTP Request
 
-`GET http://example.com/api/kittens`
+`GET http://example.com/api/users`
 
-### Query Parameters
+### Parametres URL 
 
-Parameter | Default | Description
---------- | ------- | -----------
-include_cats | false | If set to true, the result will also include cats.
-available | true | If set to false, the result will include kittens that have already been adopted.
+| Parametre | Description |
+|-----------|-------------|
+| none      | rien        |
+
+### Code HTTP retourne
+
+`200 Ok : Pas de probleme`
+
+`401 Unauthorized : Login a faire`
+
+<!--
 
 <aside class="success">
 Remember — a happy kitten is an authenticated kitten!
 </aside>
 
-## Get a Specific Kitten
+-->
 
-```ruby
-require 'kittn'
+## Detail d'un utilisateur particulier
 
-api = Kittn::APIClient.authorize!('meowmeowmeow')
-api.kittens.get(2)
-```
-
-```python
-import kittn
-
-api = kittn.authorize('meowmeowmeow')
-api.kittens.get(2)
-```
-
-```shell
-curl "http://example.com/api/kittens/2" \
-  -H "Authorization: meowmeowmeow"
-```
-
-```javascript
-const kittn = require('kittn');
-
-let api = kittn.authorize('meowmeowmeow');
-let max = api.kittens.get(2);
-```
-
-> The above command returns JSON structured like this:
+> Cet appel retourne un fichier JSON structure tel que ci-dessous:
 
 ```json
-{
-  "id": 2,
-  "name": "Max",
-  "breed": "unknown",
-  "fluffiness": 5,
-  "cuteness": 10
-}
+[
+    {
+        "id": 1,
+        "name": "Lamouliatte",
+        "first_name": "Nicolas",
+        "title": "M.",
+        "phone_number": "+33752639531",
+        "email": "nicolas@crdm-developpements.com",
+        "email_verified_at": "2023-09-21T14:48:30.000000Z",
+        "deleted_at": null,
+        "created_at": "2023-09-21T14:48:30.000000Z",
+        "updated_at": "2023-09-21T14:48:30.000000Z",
+        "preferences": {
+            "localisation": "fr",
+            "isDarkModeEnabled": false
+        }
+    }
+]
 ```
 
-This endpoint retrieves a specific kitten.
+Ce endpoint retourne un utilisateur.
 
-<aside class="warning">Inside HTML code blocks like this one, you can't use Markdown, so use <code>&lt;code&gt;</code> blocks to denote code.</aside>
 
 ### HTTP Request
 
-`GET http://example.com/kittens/<ID>`
+`GET http://example.com/api/user/<ID>`
 
-### URL Parameters
+### Parametres URL 
 
-Parameter | Description
---------- | -----------
-ID | The ID of the kitten to retrieve
+| Parametre | Description               |
+|-----------|---------------------------|
+| ID  (int) | L' ID du user a consulter |
 
-## Delete a Specific Kitten
+### Code HTTP retourne
 
-```ruby
-require 'kittn'
+`200 Ok : Pas de probleme`
 
-api = Kittn::APIClient.authorize!('meowmeowmeow')
-api.kittens.delete(2)
-```
+`401 Unauthorized : Login a faire`
 
-```python
-import kittn
+`404 Not Found : Utilisateur non trouve`
 
-api = kittn.authorize('meowmeowmeow')
-api.kittens.delete(2)
-```
 
-```shell
-curl "http://example.com/api/kittens/2" \
-  -X DELETE \
-  -H "Authorization: meowmeowmeow"
-```
+## Detail de l'utilisateur connecte
 
-```javascript
-const kittn = require('kittn');
+Ce endpoint retourne l' utilisateur connecte.
 
-let api = kittn.authorize('meowmeowmeow');
-let max = api.kittens.delete(2);
-```
-
-> The above command returns JSON structured like this:
-
-```json
-{
-  "id": 2,
-  "deleted" : ":("
-}
-```
-
-This endpoint deletes a specific kitten.
 
 ### HTTP Request
 
-`DELETE http://example.com/kittens/<ID>`
+`GET http://example.com/api/user/`
 
-### URL Parameters
+### JSON Example
 
-Parameter | Description
---------- | -----------
-ID | The ID of the kitten to delete
+[Le meme que pour le detail d'un utilisateur particulier](#detail-d-39-un-utilisateur-particulier)
+
+### Code HTTP retourne
+
+`200 Ok : Pas de probleme`
+
+`401 Unauthorized : Login a faire`
+
+## Creation d'un l'utilisateur
+
+Ce endpoint permet de creer un utilisateur.
+Les champs attendus sont les suivants:
+
+- name
+- first_name
+- title
+- phone_number
+- email
+- localisation
+
+<aside class="info">
+Pas de mot de passe, le user est cree avec un mot de passe aleatoire, il devra le changer via le lien perte de mot de passe</aside>
+
+Ce endpoint envoi un email au nouvel utilisateur (bcc le user qui fait la creation) pour le renvoyer vers la page reset password.
+
+
+### HTTP Request
+
+`POST http://example.com/api/user/<ID>`
+
+### JSON Example
+
+[Le meme que pour le detail d'un utilisateur particulier](#detail-d-39-un-utilisateur-particulier)
+
+### Parametres POST 
+
+| Parametre                                                | Description                                |
+|----------------------------------------------------------|--------------------------------------------|
+| name (string 100)                                        | le nom de l'utilisateur                    |
+| first_name (string 100)                                  | le prenom de l'utilisateur                 |
+| title  (string 10)                                       | le titre (civilite) de l'utilisateur       |
+| phone_number (string 20)                                 | le numero de telephone de l'utilisateur    |
+| email (string 255)                                       | l'adresse email de l'utilisateur           |
+| localisation (string 2) optionnel ('fr' ou 'en' ou 'es' ou 'de') | la localisation de l'utilisateur pour I18N |
+
+
+### Code HTTP retourne
+
+`204 No Content : Pas de probleme`
+
+`401 Unauthorized : Login a faire`
+
+`422 Unprocessable Content  : Echec de la validation des donnees`
+
+## Suppression d'un l'utilisateur
+
+Ce endpoint permet de supprimer un utilisateur.
+
+### HTTP Request
+
+`DELETE http://example.com/api/user/<ID>`
+
+### Parametres URL
+
+- ID (int) : L' ID du user a supprimer
+
+
+### Code HTTP retourne
+
+`204 No Content : Pas de probleme`
+
+`401 Unauthorized : Login a faire`
+
+`404 Not Found : Utilisateur non trouve`
+
+`422 Unprocessable Content  : Echec de la validation des donnees`
+
+
+
+
+## Modification d'un l'utilisateur particulier
+
+Ce endpoint permet de modifier un utilisateur specifique.
+Les champs attendus sont les suivants:
+
+- name
+- first_name
+- title
+- phone_number
+
+Ce endpoint retourne un utilisateur.
+
+
+### HTTP Request
+
+`PATCH http://example.com/api/user/<ID>`
+
+### Parametres URL
+
+- ID (int) : L' ID du user a modifier
+
+### JSON Example
+
+[Le meme que pour le detail d'un utilisateur particulier](#detail-d-39-un-utilisateur-particulier)
+
+
+
+### Parametres PATCH 
+
+| Parametre                | Description                             |
+|--------------------------|-----------------------------------------|
+| name (string 100)        | le nom de l'utilisateur                 |
+| first_name (string 100)  | le prenom de l'utilisateur              |
+| title  (string 10)       | le titre (civilite) de l'utilisateur    |
+| phone_number (string 20) | le numero de telephone de l'utilisateur |
+
+
+### Code HTTP retourne
+
+`200 Ok : Pas de probleme`
+
+`401 Unauthorized : Login a faire`
+
+`404 Not Found : Utilisateur non trouve`
+
+`422 Unprocessable Content  : Echec de la validation des donnees`
+
+
+## Modification de l'utilisateur connecte
+
+Ce endpoint permet de modifier l'utilisateur connecte.
+Les champs attendus sont les suivants:
+
+- name
+- first_name
+- title
+- phone_number
+
+Ce endpoint retourne un utilisateur.
+
+
+### HTTP Request
+
+`PATCH http://example.com/api/user/`
+
+### JSON Example
+
+[Le meme que pour le detail d'un utilisateur particulier](#detail-d-39-un-utilisateur-particulier)
+
+### Parametres PATCH 
+
+| Parametre                | Description                             |
+|--------------------------|-----------------------------------------|
+| name (string 100)        | le nom de l'utilisateur                 |
+| first_name (string 100)  | le prenom de l'utilisateur              |
+| title  (string 10)       | le titre (civilite) de l'utilisateur    |
+| phone_number (string 20) | le numero de telephone de l'utilisateur |
+
+
+### Code HTTP retourne
+
+`200 Ok : Pas de probleme`
+
+`401 Unauthorized : Login a faire`
+
+`422 Unprocessable Content  : Echec de la validation des donnees`
+
+## Modification du mot de passe de l'utilisateur connecte
+
+Ce endpoint permet de modifier le mot de passe de l'utilisateur connecte.
+Les champs attendus sont les suivants:
+
+- password
+
+Le nouveau mot de passe ne doit pas etre identique au mot de passe actuel.
+
+Conditions de validation du mot de passe:
+
+- 8 caracteres minimum
+- 1 lettre minuscule minimum
+- 1 lettre majuscule minimum
+- 1 chiffre minimum
+- 1 caractere special minimum
+
+Ce endpoint retourne un utilisateur.
+
+
+### HTTP Request
+
+`PATCH http://example.com/api/user/settings/password`
+
+### JSON Example
+
+[Le meme que pour le detail d'un utilisateur particulier](#detail-d-39-un-utilisateur-particulier)
+
+### Parametres PATCH 
+
+| Parametre                              | Description                             |
+|----------------------------------------|-----------------------------------------|
+| old_password (string 255)              | l'ancien mot de passe de l'utilisateur |
+| new_password (string 255)              | le nouveau mot de passe de l'utilisateur |
+| new_password_confirmation (string 255) | la confirmation du nouveau mot de passe de l'utilisateur |
+
+### Code HTTP retourne
+
+`200 Ok : Pas de probleme`
+
+`401 Unauthorized : Login a faire`
+
+`422 Unprocessable Content  : Echec de la validation des donnees`
+
+
+## Modification de la preference darkMode de l'utilisateur connecte
+
+Ce endpoint permet de modifier la preference darkMode de l'utilisateur connecte.
+Les champs attendus sont les suivants:
+
+- state
+
+Ce endpoint retourne un utilisateur.
+
+
+### HTTP Request
+
+`PATCH http://example.com/api/user/preferences/darkMode`
+
+### JSON Example
+
+[Le meme que pour le detail d'un utilisateur particulier](#detail-d-39-un-utilisateur-particulier)
+
+### Parametres PATCH 
+
+| Parametre                 | Description               |
+|---------------------------|---------------------------|
+| state (bool)              | Etat activation dark mode |
+
+
+### Code HTTP retourne
+
+`200 Ok : Pas de probleme`
+
+`401 Unauthorized : Login a faire`
+
+`422 Unprocessable Content  : Echec de la validation des donnees`
+
+## Mot de passe oublie
+
+Ce endpoint permet de recevoir le lien de reset password par email.
+Les champs attendus sont les suivants:
+
+- email
+
+Ce endpoint retourne un message email au destinataire.
+
+La suite se passe au point [Nouveau mot de passe (suite Mot de passe oublie)](#nouveau-mot-de-passe-suite-mot-de-passe-oublie)
+
+
+### HTTP Request
+
+`POST http://example.com/forgot-password`
+
+
+### Parametres POST 
+
+| Parametre          | Description                      |
+|--------------------|----------------------------------|
+| email (string 255) | l'adresse email de l'utilisateur |
+
+
+### Code HTTP retourne
+
+`200 Ok : Pas de probleme`
+
+`422 Unprocessable Content  : Echec de la validation des donnees (format ou non existance user)`
+
+## Nouveau mot de passe (suite Mot de passe oublie)
+
+Ce endpoint permet de recevoir le lien de reset password par email.
+Les champs attendus sont les suivants:
+
+- email
+- token
+- password
+- password_confirmation
+
+Ce endpoint retourne un message email au destinataire.
+
+
+
+### HTTP Request
+
+`POST http://example.com/reset-password`
+
+
+### Parametres POST 
+
+| Parametre          | Description                             |
+|--------------------|-----------------------------------------|
+| email (string 255) | l'adresse email de l'utilisateur        |
+| token (string 255) | le token recu par email                 |
+| password (string 255) | le nouveau mot de passe                 |
+| password_confirmation (string 255) | la confirmation du nouveau mot de passe |
+
+
+### Code HTTP retourne
+
+`200 Ok : Pas de probleme`
+
+`422 Unprocessable Content  : Echec de la validation des donnees (voir message particuler)`
+
+```json
+{
+    "message": "Ce jeton de réinitialisation du mot de passe n'est pas valide.",
+    "errors": {
+        "email": [
+            "Ce jeton de réinitialisation du mot de passe n'est pas valide."
+        ]
+    }
+}
+```
+
+
+## Nouvelle adresse mail
+
+Ce endpoint permet de modifier l'adresse mail de l'utilisateur connecte.
+Ce endpoint permet de recevoir le lien de validation de la nouvelle adresse mail par email.
+Les champs attendus sont les suivants:
+
+- email
+
+Ce endpoint retourne un message email au destinataire.
+
+La suite se passe au point [Nouveau mot de passe (suite Mot de passe oublie)](#nouveau-mot-de-passe-suite-mot-de-passe-oublie)
+
+
+### HTTP Request
+
+`PATCH http://example.com/api/user/settings/email`
+
+
+### Parametres PATCH 
+
+| Parametre          | Description                      |
+|--------------------|----------------------------------|
+| email (string 255) | l'adresse email de l'utilisateur |
+
+
+### Code HTTP retourne
+
+`200 Ok : Pas de probleme`
+
+`422 Unprocessable Content  : Echec de la validation des donnees (format ou non existance user)`
+
+## Nouveau mot de passe (suite Mot de passe oublie)
+
+Ce endpoint permet de recevoir le lien de reset password par email.
+Les champs attendus sont les suivants:
+
+- email
+- token
+- password
+- password_confirmation
+
+Ce endpoint retourne un message email au destinataire.
+
+
+
+### HTTP Request
+
+`POST http://example.com/reset-password`
+
+
+### Parametres POST 
+
+| Parametre          | Description                             |
+|--------------------|-----------------------------------------|
+| email (string 255) | l'adeesse email de l'utilisateur |
+| token (string 255) | le token recu par email |
+| password (string 255) | le nouveau mot de passe |
+| password_confirmation (string 255) | la confirmation du nouveau mot de passe |
+
+
+### Code HTTP retourne
+
+`200 Ok : Pas de probleme`
+
+`422 Unprocessable Content  : Echec de la validation des donnees (voir message particuler)`
+
+```json
+{
+    "message": "Ce jeton de réinitialisation du mot de passe n'est pas valide.",
+    "errors": {
+        "email": [
+            "Ce jeton de réinitialisation du mot de passe n'est pas valide."
+        ]
+    }
+}
+```
+
+
+
+
+
+
+
+
+
+
+
+
 
