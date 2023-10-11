@@ -22,9 +22,7 @@ meta:
 
 Documentation pout l'API de l'application CRDM UNIVERSE
 
-
 # Authentification
-
 
 CRDM SYSTEM utilise un couple login/password personnel pour autoriser l' acces a son API.
 
@@ -36,7 +34,6 @@ Il faut envoyer le cookie XSRF-TOKEN dans le header de la requete pour pouvoir a
 
 [Lien vers le detail du XSRF-TOKEN](#xsrf-token)
 
-
 ## Login
 
 Ce endpoint permet de s'identifier.
@@ -45,12 +42,12 @@ Ce endpoint permet de s'identifier.
 
 `POST http://example.com/login`
 
-### Parametres POST 
+### Parametres POST
 
-| Parametre       | Description            |
-|-----------------|------------------------|
-| email (text)    | adresse mail           |
-| password (text) | mot de passe           |
+| Parametre       | Description             |
+|-----------------|-------------------------|
+| email (text)    | adresse mail            |
+| password (text) | mot de passe            |
 | remember (bool) | case se souvenir de moi |
 
 ### Code HTTP retourne
@@ -77,6 +74,7 @@ Ce endpoint permet de s'identifier.
 ```
 
 `401 Unauthorized          : Login KO`
+
 ## Logout
 
 Ce endpoint permet de se deconnecter.
@@ -85,12 +83,11 @@ Ce endpoint permet de se deconnecter.
 
 `POST http://example.com/logout`
 
-### Parametres POST 
+### Parametres POST
 
 | Parametre | Description |
 |-----------|-------------|
 | none      | rien        |
-
 
 ### Code HTTP retourne
 
@@ -106,12 +103,11 @@ Ce endpoint permet de se recuperer le cookie XSRF-TOKEN.
 
 `GET http://example.com/sanctum/csrf-cookie`
 
-### Parametres GET 
+### Parametres GET
 
 | Parametre | Description |
 |-----------|-------------|
 | none      | rien        |
-
 
 ### Code HTTP retourne
 
@@ -168,7 +164,7 @@ Ce endpoint donne la liste des utilisateurs (non supprimes).
 
 `GET http://example.com/api/users`
 
-### Parametres URL 
+### Parametres URL
 
 | Parametre | Description |
 |-----------|-------------|
@@ -215,12 +211,11 @@ Remember — a happy kitten is an authenticated kitten!
 
 Ce endpoint retourne un utilisateur.
 
-
 ### HTTP Request
 
 `GET http://example.com/api/user/<ID>`
 
-### Parametres URL 
+### Parametres URL
 
 | Parametre | Description               |
 |-----------|---------------------------|
@@ -234,11 +229,9 @@ Ce endpoint retourne un utilisateur.
 
 `404 Not Found : Utilisateur non trouve`
 
-
 ## Detail de l'utilisateur connecte
 
 Ce endpoint retourne l' utilisateur connecte.
-
 
 ### HTTP Request
 
@@ -256,6 +249,38 @@ Ce endpoint retourne l' utilisateur connecte.
 
 ## Creation d'un l'utilisateur
 
+> Integration pour react:
+
+```javascript
+const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+		e.preventDefault()
+		const res = await fetch('http://api.crdm.local:8000/register', {
+			method: 'POST',
+			credentials: 'include',
+			headers: {
+				'Content-Type': 'application/json',
+				Accept: 'application/json',
+			},
+			body: JSON.stringify({
+				name: name,
+				first_name: first_name,
+				title: title,
+				phone_number: phone_number,
+				email: email,
+				localisation: localisation,
+			}),
+		})
+
+		if (res.ok) {
+			alert('Utilisateur créé avec succès !')
+		} else {
+			const json = await res.json()
+			//alert('errors ' + json.message)
+			alert(JSON.stringify(json))
+		}
+	}
+```
+
 Ce endpoint permet de creer un utilisateur.
 Les champs attendus sont les suivants:
 
@@ -269,8 +294,8 @@ Les champs attendus sont les suivants:
 <aside class="info">
 Pas de mot de passe, le user est cree avec un mot de passe aleatoire, il devra le changer via le lien perte de mot de passe</aside>
 
-Ce endpoint envoi un email au nouvel utilisateur (bcc le user qui fait la creation) pour le renvoyer vers la page reset password.
-
+Ce endpoint envoi un email au nouvel utilisateur (bcc le user qui fait la creation) pour le renvoyer vers la page reset
+password.
 
 ### HTTP Request
 
@@ -280,17 +305,16 @@ Ce endpoint envoi un email au nouvel utilisateur (bcc le user qui fait la creati
 
 [Le meme que pour le detail d'un utilisateur particulier](#detail-d-39-un-utilisateur-particulier)
 
-### Parametres POST 
+### Parametres POST
 
-| Parametre                                                | Description                                |
-|----------------------------------------------------------|--------------------------------------------|
-| name (string 100)                                        | le nom de l'utilisateur                    |
-| first_name (string 100)                                  | le prenom de l'utilisateur                 |
-| title  (string 10)                                       | le titre (civilite) de l'utilisateur       |
-| phone_number (string 20)                                 | le numero de telephone de l'utilisateur    |
-| email (string 255)                                       | l'adresse email de l'utilisateur           |
+| Parametre                                                        | Description                                |
+|------------------------------------------------------------------|--------------------------------------------|
+| name (string 100)                                                | le nom de l'utilisateur                    |
+| first_name (string 100)                                          | le prenom de l'utilisateur                 |
+| title  (string 10)                                               | le titre (civilite) de l'utilisateur       |
+| phone_number (string 20)                                         | le numero de telephone de l'utilisateur    |
+| email (string 255)                                               | l'adresse email de l'utilisateur           |
 | localisation (string 2) optionnel ('fr' ou 'en' ou 'es' ou 'de') | la localisation de l'utilisateur pour I18N |
-
 
 ### Code HTTP retourne
 
@@ -312,7 +336,6 @@ Ce endpoint permet de supprimer un utilisateur.
 
 - ID (int) : L' ID du user a supprimer
 
-
 ### Code HTTP retourne
 
 `204 No Content : Pas de probleme`
@@ -322,9 +345,6 @@ Ce endpoint permet de supprimer un utilisateur.
 `404 Not Found : Utilisateur non trouve`
 
 `422 Unprocessable Content  : Echec de la validation des donnees`
-
-
-
 
 ## Modification d'un l'utilisateur particulier
 
@@ -338,7 +358,6 @@ Les champs attendus sont les suivants:
 
 Ce endpoint retourne un utilisateur.
 
-
 ### HTTP Request
 
 `PATCH http://example.com/api/user/<ID>`
@@ -351,9 +370,7 @@ Ce endpoint retourne un utilisateur.
 
 [Le meme que pour le detail d'un utilisateur particulier](#detail-d-39-un-utilisateur-particulier)
 
-
-
-### Parametres PATCH 
+### Parametres PATCH
 
 | Parametre                | Description                             |
 |--------------------------|-----------------------------------------|
@@ -361,7 +378,6 @@ Ce endpoint retourne un utilisateur.
 | first_name (string 100)  | le prenom de l'utilisateur              |
 | title  (string 10)       | le titre (civilite) de l'utilisateur    |
 | phone_number (string 20) | le numero de telephone de l'utilisateur |
-
 
 ### Code HTTP retourne
 
@@ -372,7 +388,6 @@ Ce endpoint retourne un utilisateur.
 `404 Not Found : Utilisateur non trouve`
 
 `422 Unprocessable Content  : Echec de la validation des donnees`
-
 
 ## Modification de l'utilisateur connecte
 
@@ -386,7 +401,6 @@ Les champs attendus sont les suivants:
 
 Ce endpoint retourne un utilisateur.
 
-
 ### HTTP Request
 
 `PATCH http://example.com/api/user/`
@@ -395,7 +409,7 @@ Ce endpoint retourne un utilisateur.
 
 [Le meme que pour le detail d'un utilisateur particulier](#detail-d-39-un-utilisateur-particulier)
 
-### Parametres PATCH 
+### Parametres PATCH
 
 | Parametre                | Description                             |
 |--------------------------|-----------------------------------------|
@@ -403,7 +417,6 @@ Ce endpoint retourne un utilisateur.
 | first_name (string 100)  | le prenom de l'utilisateur              |
 | title  (string 10)       | le titre (civilite) de l'utilisateur    |
 | phone_number (string 20) | le numero de telephone de l'utilisateur |
-
 
 ### Code HTTP retourne
 
@@ -432,7 +445,6 @@ Conditions de validation du mot de passe:
 
 Ce endpoint retourne un utilisateur.
 
-
 ### HTTP Request
 
 `PATCH http://example.com/api/user/settings/password`
@@ -441,12 +453,12 @@ Ce endpoint retourne un utilisateur.
 
 [Le meme que pour le detail d'un utilisateur particulier](#detail-d-39-un-utilisateur-particulier)
 
-### Parametres PATCH 
+### Parametres PATCH
 
-| Parametre                              | Description                             |
-|----------------------------------------|-----------------------------------------|
-| old_password (string 255)              | l'ancien mot de passe de l'utilisateur |
-| new_password (string 255)              | le nouveau mot de passe de l'utilisateur |
+| Parametre                              | Description                                              |
+|----------------------------------------|----------------------------------------------------------|
+| old_password (string 255)              | l'ancien mot de passe de l'utilisateur                   |
+| new_password (string 255)              | le nouveau mot de passe de l'utilisateur                 |
 | new_password_confirmation (string 255) | la confirmation du nouveau mot de passe de l'utilisateur |
 
 ### Code HTTP retourne
@@ -457,7 +469,6 @@ Ce endpoint retourne un utilisateur.
 
 `422 Unprocessable Content  : Echec de la validation des donnees`
 
-
 ## Modification de la preference darkMode de l'utilisateur connecte
 
 Ce endpoint permet de modifier la preference darkMode de l'utilisateur connecte.
@@ -467,7 +478,6 @@ Les champs attendus sont les suivants:
 
 Ce endpoint retourne un utilisateur.
 
-
 ### HTTP Request
 
 `PATCH http://example.com/api/user/preferences/darkMode`
@@ -476,12 +486,11 @@ Ce endpoint retourne un utilisateur.
 
 [Le meme que pour le detail d'un utilisateur particulier](#detail-d-39-un-utilisateur-particulier)
 
-### Parametres PATCH 
+### Parametres PATCH
 
-| Parametre                 | Description               |
-|---------------------------|---------------------------|
-| state (bool)              | Etat activation dark mode |
-
+| Parametre    | Description               |
+|--------------|---------------------------|
+| state (bool) | Etat activation dark mode |
 
 ### Code HTTP retourne
 
@@ -500,20 +509,18 @@ Les champs attendus sont les suivants:
 
 Ce endpoint retourne un message email au destinataire.
 
-La suite se passe au point [Nouveau mot de passe (suite Mot de passe oublie)](#nouveau-mot-de-passe-suite-mot-de-passe-oublie)
-
+La suite se passe au
+point [Nouveau mot de passe (suite Mot de passe oublie)](#nouveau-mot-de-passe-suite-mot-de-passe-oublie)
 
 ### HTTP Request
 
 `POST http://example.com/forgot-password`
 
-
-### Parametres POST 
+### Parametres POST
 
 | Parametre          | Description                      |
 |--------------------|----------------------------------|
 | email (string 255) | l'adresse email de l'utilisateur |
-
 
 ### Code HTTP retourne
 
@@ -533,22 +540,18 @@ Les champs attendus sont les suivants:
 
 Ce endpoint retourne un message email au destinataire.
 
-
-
 ### HTTP Request
 
 `POST http://example.com/reset-password`
 
+### Parametres POST
 
-### Parametres POST 
-
-| Parametre          | Description                             |
-|--------------------|-----------------------------------------|
-| email (string 255) | l'adresse email de l'utilisateur        |
-| token (string 255) | le token recu par email                 |
-| password (string 255) | le nouveau mot de passe                 |
+| Parametre                          | Description                             |
+|------------------------------------|-----------------------------------------|
+| email (string 255)                 | l'adresse email de l'utilisateur        |
+| token (string 255)                 | le token recu par email                 |
+| password (string 255)              | le nouveau mot de passe                 |
 | password_confirmation (string 255) | la confirmation du nouveau mot de passe |
-
 
 ### Code HTTP retourne
 
@@ -567,7 +570,6 @@ Ce endpoint retourne un message email au destinataire.
 }
 ```
 
-
 ## Nouvelle adresse mail
 
 Ce endpoint permet de modifier l'adresse mail de l'utilisateur connecte.
@@ -578,20 +580,18 @@ Les champs attendus sont les suivants:
 
 Ce endpoint retourne un message email au destinataire.
 
-La suite se passe au point [Nouveau mot de passe (suite Mot de passe oublie)](#nouveau-mot-de-passe-suite-mot-de-passe-oublie)
-
+La suite se passe au
+point [Nouveau mot de passe (suite Mot de passe oublie)](#nouveau-mot-de-passe-suite-mot-de-passe-oublie)
 
 ### HTTP Request
 
 `PATCH http://example.com/api/user/settings/email`
 
-
-### Parametres PATCH 
+### Parametres PATCH
 
 | Parametre          | Description                      |
 |--------------------|----------------------------------|
 | email (string 255) | l'adresse email de l'utilisateur |
-
 
 ### Code HTTP retourne
 
@@ -611,22 +611,18 @@ Les champs attendus sont les suivants:
 
 Ce endpoint retourne un message email au destinataire.
 
-
-
 ### HTTP Request
 
 `POST http://example.com/reset-password`
 
+### Parametres POST
 
-### Parametres POST 
-
-| Parametre          | Description                             |
-|--------------------|-----------------------------------------|
-| email (string 255) | l'adeesse email de l'utilisateur |
-| token (string 255) | le token recu par email |
-| password (string 255) | le nouveau mot de passe |
+| Parametre                          | Description                             |
+|------------------------------------|-----------------------------------------|
+| email (string 255)                 | l'adeesse email de l'utilisateur        |
+| token (string 255)                 | le token recu par email                 |
+| password (string 255)              | le nouveau mot de passe                 |
 | password_confirmation (string 255) | la confirmation du nouveau mot de passe |
-
 
 ### Code HTTP retourne
 
